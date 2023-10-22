@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import sqlite3
+import pandas as pd
 import re
 
 #hacemos la solicitud para que ingrese a este html
@@ -107,8 +108,17 @@ if link_wikipedia.status_code == 200:
 else:
     print("No se pudo acceder a Wikipedia")
 
+df_pandas=pd.read_html(url, attrs = {'class': 'wikitable'})[0]
+
+alcaldes = df_pandas["Alcalde"].tolist() + df_pandas["Alcalde.1"].tolist()
+
+
+
+data = list(zip(comunas, coordenadas, poblacion_numeros))
+data.sort(key=lambda x: x[0])
+
 try:
-    sqliteConnection = sqlite3.connect('C:\\Proyectos\\Beautiful\\coor.db')
+    sqliteConnection = sqlite3.connect('C:\\Proyectos\\BeautifulSoup_Region_Lagos\\coor.db')
     cursor = sqliteConnection.cursor()
 
     # Verificar si la tabla Comunas contiene datos
@@ -120,13 +130,13 @@ try:
         cursor.execute("DELETE FROM Comunas")
         print("Eliminando registros anteriores.")
 
-    for i in range(len(comunas)):
-        nombre_comuna = comunas[i]
-        latitud, longitud = coordenadas[i]
-        poblacion = poblacion_numeros[i]
-        # Inserta el registro en la tabla 'Comunas'
-        cursor.execute("INSERT INTO Comunas(Comuna, Latitud, Longitud, Poblacion) VALUES (?, ?, ?, ?)", (nombre_comuna, latitud, longitud,poblacion,))
     
+    for i in range(len(comunas)):
+        nombrecomuna, (latitud, longitud), poblacion = data[i]
+        alcalde = alcaldes[i]
+        cursor.execute("INSERT INTO Comunas(Comuna, Latitud, Longitud, Poblacion, Alcaldes) VALUES (?, ?, ?, ?, ?)",
+                       (nombrecomuna, latitud, longitud, poblacion, alcalde))
+
 
     sqliteConnection.commit()
     cursor.close()
