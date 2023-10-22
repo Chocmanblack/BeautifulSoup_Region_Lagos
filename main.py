@@ -120,6 +120,19 @@ def Scrap_Poblacion_Comunas(url):
     return poblacion_numeros
 
 
+def Alcaldes_Comuna(url):
+
+
+    Comuna_alcalde = []
+    Wikipedia = requests.get(url)
+    
+    if Wikipedia.status_code == 200:
+        soup = BeautifulSoup(Wikipedia.text, 'html.parser')
+        Alcaldes_tabla = soup.find('div', {'class': "wikitable"})
+        print(Alcaldes_tabla)
+
+
+    return Comuna_alcalde
 
 
 if __name__ == "__main__":
@@ -127,6 +140,8 @@ if __name__ == "__main__":
     Comunas       = Scrap_Nombre_Comunas(url) # LISTO SE HIZO SCRAP PARA OBTENER LAS COMUNAS
     Coordenadas   = Scrap_Coordenadas_Comunas(url) 
     Poblacion     = Scrap_Poblacion_Comunas(url)
+    Alcaldes      = Alcaldes_Comuna(url)
+
 
     try:
         sqliteConnection = sqlite3.connect('C:\\Proyectos\\Beautiful\\coor.db')
