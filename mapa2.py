@@ -19,11 +19,11 @@ def base():
     )
     
     try:
-        sqliteConnection = sqlite3.connect('C:\\Proyectos\\Beautiful\\coor.db')
+        sqliteConnection = sqlite3.connect('C:\\Proyectos\\BeautifulSoup_Region_Lagos\\coor.db')
         cursor = sqliteConnection.cursor()
         print("Connected to SQLite")
 
-        sqlite_select_query = """SELECT Comuna, latitud, longitud, Poblacion FROM Comunas;"""
+        sqlite_select_query = """SELECT Comuna, latitud, longitud, Poblacion, Alcaldes FROM Comunas;"""
     
         cursor.execute(sqlite_select_query)
     
@@ -48,7 +48,7 @@ def base():
                 opacity=1,
                 fill_color="orange",
                 fill=False,  # gets overridden by fill_color
-                popup=' <h3> {} habitantes.</h3>'.format(item[3]),
+                popup=' <h4><u><b>Comuna: <b></u>{}</h4> <br> <br><h4><u><b>Habitantes:<b></u>{}</h4> . <br><br><h4><u> Alcalde:</u></h4> {}'.format(item[0],item[3],item[4]),
                 tooltip=item[0],
             ).add_to(map)
 

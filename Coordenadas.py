@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
+import pandas as pd
 import requests
 import sqlite3
-import pandas as pd
 import re
 
 #hacemos la solicitud para que ingrese a este html
@@ -108,10 +108,13 @@ if link_wikipedia.status_code == 200:
 else:
     print("No se pudo acceder a Wikipedia")
 
-df_pandas=pd.read_html(url, attrs = {'class': 'wikitable'})[0]
+
+
+
+df_pandas=pd.read_html('https://es.wikipedia.org/wiki/Regi%C3%B3n_de_Los_Lagos', attrs = {'class': 'wikitable'})[0]
 
 alcaldes = df_pandas["Alcalde"].tolist() + df_pandas["Alcalde.1"].tolist()
-
+print(alcaldes)
 
 
 data = list(zip(comunas, coordenadas, poblacion_numeros))
