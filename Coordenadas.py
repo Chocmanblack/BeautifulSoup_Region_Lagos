@@ -10,7 +10,6 @@ link_wikipedia = requests.get('https://es.wikipedia.org/wiki/Regi%C3%B3n_de_Los_
 if link_wikipedia.status_code == 200:
 
     soup = BeautifulSoup(link_wikipedia.text, 'html.parser')
-    print(soup.title)
     region = soup.find('div', {'class': "nounderlines noresize"})
     
     comunas = []
@@ -20,17 +19,10 @@ if link_wikipedia.status_code == 200:
         print(comuna)
         comunas.append(comuna)
 
-    print(comunas)
-
-
-
-
-
-
+    
     #Prueba con solo un enlace para ver la forma de reedireccionamiento.
     enlaces = region.find_all('a', href=True)
 
-    print(len(enlaces))
     
     coordenadas = []
     poblacion_numeros = []
@@ -39,9 +31,6 @@ if link_wikipedia.status_code == 200:
     for enlace in enlaces[1:]:
 
         url = ("https://es.wikipedia.org/" + enlace['href'])
-        
-        
-        print(url)
         
         #Ahora ingresamos a las url de cada ciudad para obtener sus coordenadas
         response_ciudad = requests.get(url)
@@ -110,11 +99,10 @@ else:
 
 
 
-
+#Alcaldes
 df_pandas=pd.read_html('https://es.wikipedia.org/wiki/Regi%C3%B3n_de_Los_Lagos', attrs = {'class': 'wikitable'})[0]
-
 alcaldes = df_pandas["Alcalde"].tolist() + df_pandas["Alcalde.1"].tolist()
-print(alcaldes)
+
 
 
 data = list(zip(comunas, coordenadas, poblacion_numeros))
